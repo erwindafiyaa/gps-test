@@ -2,1312 +2,3787 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>GPS Realtime Tracker</title>
+    <title>GPS Smart Realtime Tracker</title>
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <!-- LEAFLET CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #222;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                #f5f6f8;
+
+            color:
+                #222;
         }
+
 
         .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
+
+            max-width:
+                1200px;
+
+            margin:
+                auto;
+
+            padding:
+                20px;
+
         }
+
 
         .header {
-            margin-bottom: 20px;
+
+            margin-bottom:
+                20px;
+
         }
+
 
         .header h2 {
-            margin: 0 0 5px 0;
+
+            margin:
+                0 0 5px 0;
+
         }
+
 
         .header p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
+
+            margin:
+                0;
+
+            color:
+                #666;
+
+            font-size:
+                14px;
+
         }
+
 
         .card {
-            background: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 16px;
+
+            background:
+                white;
+
+            border-radius:
+                12px;
+
+            padding:
+                18px;
+
+            margin-bottom:
+                16px;
 
             box-shadow:
-                0 2px 8px rgba(0, 0, 0, 0.06);
+                0 2px 8px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.06
+                );
+
         }
+
 
         .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+
+            display:
+                flex;
+
+            gap:
+                10px;
+
+            flex-wrap:
+                wrap;
+
         }
+
 
         button {
-            border: none;
-            border-radius: 8px;
-            padding: 11px 18px;
 
-            font-size: 14px;
-            cursor: pointer;
+            border:
+                none;
+
+            border-radius:
+                8px;
+
+            padding:
+                11px 18px;
+
+            font-size:
+                14px;
+
+            cursor:
+                pointer;
+
         }
+
 
         .btn-start {
-            background: #222;
-            color: white;
+
+            background:
+                #222;
+
+            color:
+                white;
+
         }
+
 
         .btn-stop {
-            background: #e9ecef;
-            color: #222;
+
+            background:
+                #e9ecef;
+
+            color:
+                #222;
+
         }
+
 
         .btn-clear {
-            background: #fff;
-            border: 1px solid #ddd;
+
+            background:
+                #fff;
+
+            border:
+                1px solid #ddd;
+
         }
+
 
         button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+
+            opacity:
+                0.5;
+
+            cursor:
+                not-allowed;
+
         }
+
 
         .status {
-            display: inline-block;
 
-            padding: 5px 10px;
-            border-radius: 20px;
+            display:
+                inline-block;
 
-            font-size: 12px;
-            font-weight: bold;
+            padding:
+                6px 11px;
 
-            margin-top: 15px;
+            border-radius:
+                20px;
+
+            font-size:
+                12px;
+
+            font-weight:
+                bold;
+
+            margin-top:
+                15px;
+
         }
+
 
         .status-idle {
-            background: #eee;
-            color: #666;
+
+            background:
+                #eee;
+
+            color:
+                #666;
+
         }
+
 
         .status-active {
-            background: #dff7e5;
-            color: #177a37;
+
+            background:
+                #dff7e5;
+
+            color:
+                #177a37;
+
         }
+
 
         .status-error {
-            background: #ffe1e1;
-            color: #a51d1d;
+
+            background:
+                #ffe1e1;
+
+            color:
+                #a51d1d;
+
         }
+
+
+        .status-warning {
+
+            background:
+                #fff3cd;
+
+            color:
+                #856404;
+
+        }
+
 
         .current-location {
-            display: grid;
+
+            display:
+                grid;
 
             grid-template-columns:
-                repeat(auto-fit, minmax(160px, 1fr));
+                repeat(
+                    auto-fit,
+                    minmax(
+                        150px,
+                        1fr
+                    )
+                );
 
-            gap: 12px;
+            gap:
+                12px;
 
-            margin-top: 15px;
+            margin-top:
+                15px;
+
         }
+
 
         .info-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 12px;
+
+            background:
+                #f8f9fa;
+
+            border-radius:
+                8px;
+
+            padding:
+                12px;
+
         }
+
 
         .info-label {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 5px;
+
+            font-size:
+                12px;
+
+            color:
+                #777;
+
+            margin-bottom:
+                5px;
+
         }
+
 
         .info-value {
-            font-size: 15px;
-            font-weight: bold;
-            word-break: break-word;
+
+            font-size:
+                15px;
+
+            font-weight:
+                bold;
+
+            word-break:
+                break-word;
+
         }
 
-        .table-wrapper {
-            overflow-x: auto;
-            max-height: 400px;
-            overflow-y: auto;
+
+        .movement-moving {
+
+            color:
+                #12823b;
+
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1050px;
+
+        .movement-stationary {
+
+            color:
+                #555;
+
         }
 
-        th {
-            position: sticky;
-            top: 0;
 
-            background: #f4f5f7;
+        .movement-uncertain {
 
-            text-align: left;
-            font-size: 12px;
+            color:
+                #b57900;
 
-            padding: 12px;
-
-            border-bottom: 1px solid #ddd;
         }
 
-        td {
-            padding: 11px 12px;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
-        }
-
-        tr:hover {
-            background: #fafafa;
-        }
-
-        #map {
-            height: 480px;
-            width: 100%;
-
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .map-info {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 12px;
-        }
 
         .location-name {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #444;
+
+            margin-top:
+                12px;
+
+            padding:
+                11px;
+
+            background:
+                #f8f9fa;
+
+            border-radius:
+                8px;
+
+            font-size:
+                14px;
+
         }
+
+
+        .table-wrapper {
+
+            overflow-x:
+                auto;
+
+            max-height:
+                420px;
+
+            overflow-y:
+                auto;
+
+        }
+
+
+        table {
+
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+
+            min-width:
+                1200px;
+
+        }
+
+
+        th {
+
+            position:
+                sticky;
+
+            top:
+                0;
+
+            background:
+                #f4f5f7;
+
+            text-align:
+                left;
+
+            font-size:
+                12px;
+
+            padding:
+                12px;
+
+            border-bottom:
+                1px solid #ddd;
+
+            z-index:
+                1;
+
+        }
+
+
+        td {
+
+            padding:
+                11px 12px;
+
+            border-bottom:
+                1px solid #eee;
+
+            font-size:
+                13px;
+
+        }
+
+
+        tr:hover {
+
+            background:
+                #fafafa;
+
+        }
+
+
+        #map {
+
+            height:
+                480px;
+
+            width:
+                100%;
+
+            border-radius:
+                10px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .section-title {
+
+            font-size:
+                16px;
+
+            font-weight:
+                bold;
+
+            margin-bottom:
+                15px;
+
+        }
+
+
+        .map-info {
+
+            font-size:
+                13px;
+
+            color:
+                #666;
+
+            margin-bottom:
+                12px;
+
+            line-height:
+                1.5;
+
+        }
+
 
         @media(max-width: 600px) {
 
             .container {
-                padding: 12px;
+
+                padding:
+                    12px;
+
             }
 
+
             #map {
-                height: 350px;
+
+                height:
+                    350px;
+
             }
 
         }
+
     </style>
 
 </head>
 
+
 <body>
 
-    <div class="container">
 
-        <!-- HEADER -->
+<div class="container">
 
-        <div class="header">
 
-            <h2>GPS Realtime Tracker</h2>
+    <!-- HEADER -->
 
-            <p>
-                Tracking posisi setiap 5 detik
-            </p>
+    <div class="header">
 
-        </div>
+        <h2>
+            GPS Smart Realtime Tracker
+        </h2>
 
-
-        <!-- CONTROL -->
-
-        <div class="card">
-
-            <div class="button-group">
-
-                <button id="btnStart" class="btn-start" onclick="startTracking()">
-                    Mulai Tracking
-                </button>
-
-                <button id="btnStop" class="btn-stop" onclick="stopTracking()" disabled>
-                    Stop Tracking
-                </button>
-
-                <button class="btn-clear" onclick="clearHistory()">
-                    Clear History
-                </button>
-
-            </div>
-
-            <div id="status" class="status status-idle">
-                Tracking belum dimulai
-            </div>
-
-
-            <!-- CURRENT LOCATION -->
-
-            <div class="current-location">
-
-                <div class="info-item">
-
-                    <div class="info-label">
-                        Latitude
-                    </div>
-
-                    <div id="lat" class="info-value">
-                        -
-                    </div>
-
-                </div>
-
-                <div class="info-item">
-
-                    <div class="info-label">
-                        Longitude
-                    </div>
-
-                    <div id="lon" class="info-value">
-                        -
-                    </div>
-
-                </div>
-
-                <div class="info-item">
-
-                    <div class="info-label">
-                        Accuracy
-                    </div>
-
-                    <div id="accuracy" class="info-value">
-                        -
-                    </div>
-
-                </div>
-
-                <div class="info-item">
-
-                    <div class="info-label">
-                        Speed
-                    </div>
-
-                    <div id="speed" class="info-value">
-                        -
-                    </div>
-
-                </div>
-
-                <div class="info-item">
-
-                    <div class="info-label">
-                        Last Update
-                    </div>
-
-                    <div id="time" class="info-value">
-                        -
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div id="currentLocationName" class="location-name">
-                Lokasi: -
-            </div>
-
-        </div>
-
-
-        <!-- HISTORY TABLE -->
-
-        <div class="card">
-
-            <div class="section-title">
-                History Tracking
-            </div>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>No</th>
-
-                            <th>Waktu</th>
-
-                            <th>Latitude</th>
-
-                            <th>Longitude</th>
-
-                            <th>Accuracy</th>
-
-                            <th>Speed</th>
-
-                            <th>Nama Lokasi</th>
-
-                            <th>Jalan</th>
-
-                            <th>Kota</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="trackingTable">
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-
-        <!-- MAP -->
-
-        <div class="card">
-
-            <div class="section-title">
-                Jalur Perjalanan
-            </div>
-
-            <div class="map-info">
-
-                Garis menunjukkan posisi GPS
-                yang direkam setiap 5 detik.
-
-            </div>
-
-            <div id="map"></div>
-
-        </div>
+        <p>
+            GPS dicek setiap 5 detik,
+            tetapi history hanya disimpan
+            ketika sistem mendeteksi pergerakan nyata.
+        </p>
 
     </div>
 
 
-    <!-- Leaflet JS -->
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-    </script>
+    <!-- CONTROL -->
 
-
-    <script>
-
-        /*
-        =====================================================
-        GLOBAL VARIABLE
-        =====================================================
-        */
-
-        let watchId = null;
-
-        let trackingInterval = null;
-
-        let latestPosition = null;
-
-        let trackingCounter = 0;
-
-        let map = null;
-
-        let currentMarker = null;
-
-        let startMarker = null;
-
-        let routeLine = null;
-
-        let routeCoordinates = [];
+    <div class="card">
 
 
-        /*
-        =====================================================
-        INITIALIZE MAP
-        =====================================================
-        */
+        <div class="button-group">
 
-        function initializeMap() {
 
-            map = L.map("map").setView(
-                [-6.4236974, 106.9659941],
-                15
-            );
+            <button
+                id="btnStart"
+                class="btn-start"
+                onclick="startTracking()"
+            >
+                Mulai Tracking
+            </button>
 
-            L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+            <button
+                id="btnStop"
+                class="btn-stop"
+                onclick="stopTracking()"
+                disabled
+            >
+                Stop Tracking
+            </button>
+
+
+            <button
+                class="btn-clear"
+                onclick="clearHistory()"
+            >
+                Clear History
+            </button>
+
+
+        </div>
+
+
+        <div
+            id="status"
+            class="status status-idle"
+        >
+            Tracking belum dimulai
+        </div>
+
+
+
+        <!-- CURRENT GPS INFO -->
+
+        <div class="current-location">
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Latitude
+                </div>
+
+                <div
+                    id="lat"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Longitude
+                </div>
+
+                <div
+                    id="lon"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Accuracy
+                </div>
+
+                <div
+                    id="accuracy"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Speed
+                </div>
+
+                <div
+                    id="speed"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Last GPS Update
+                </div>
+
+                <div
+                    id="time"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Movement
+                </div>
+
+                <div
+                    id="movementState"
+                    class="info-value movement-uncertain"
+                >
+                    UNCERTAIN
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Window Distance
+                </div>
+
+                <div
+                    id="movementDistance"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Noise Threshold
+                </div>
+
+                <div
+                    id="noiseThreshold"
+                    class="info-value"
+                >
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Data Tersimpan
+                </div>
+
+                <div
+                    id="recordedCount"
+                    class="info-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Data Di-skip
+                </div>
+
+                <div
+                    id="skippedCount"
+                    class="info-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            id="currentLocationName"
+            class="location-name"
+        >
+            Lokasi: -
+        </div>
+
+
+    </div>
+
+
+
+    <!-- HISTORY -->
+
+    <div class="card">
+
+
+        <div class="section-title">
+            History Tracking
+        </div>
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                <tr>
+
+                    <th>No</th>
+
+                    <th>Waktu</th>
+
+                    <th>Latitude</th>
+
+                    <th>Longitude</th>
+
+                    <th>Accuracy</th>
+
+                    <th>Speed</th>
+
+                    <th>Distance</th>
+
+                    <th>Nama Lokasi</th>
+
+                    <th>Jalan</th>
+
+                    <th>Kota</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="trackingTable"
+                >
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- MAP -->
+
+    <div class="card">
+
+
+        <div class="section-title">
+            Jalur Perjalanan
+        </div>
+
+
+        <div class="map-info">
+
+            Marker GPS tetap menunjukkan
+            posisi terakhir perangkat.
+
+            <br>
+
+            Garis dan titik perjalanan
+            hanya ditambahkan ketika
+            sistem menilai objek benar-benar bergerak.
+
+        </div>
+
+
+        <div id="map"></div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- LEAFLET JS -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+
+<script>
+
+
+/*
+=========================================================
+CONFIGURATION
+=========================================================
+*/
+
+
+/*
+GPS dievaluasi setiap 5 detik.
+*/
+
+const SAMPLE_INTERVAL_MS =
+    5000;
+
+
+/*
+Jika accuracy lebih buruk dari 30 meter,
+data tidak digunakan untuk movement detection.
+*/
+
+const MAX_ACCURACY_METERS =
+    30;
+
+
+/*
+Noise minimum yang kita toleransi.
+
+Jangan dibuat 1 meter karena GPS HP
+bisa bergeser beberapa meter saat diam.
+*/
+
+const MIN_NOISE_RADIUS_METERS =
+    8;
+
+
+/*
+Jika browser memberikan speed >= 3 km/h,
+ini menjadi bukti kuat objek bergerak.
+*/
+
+const MIN_MOVING_SPEED_KMH =
+    3;
+
+
+/*
+Berapa kali bukti bergerak harus muncul
+berturut-turut sebelum state MOVING.
+*/
+
+const MOVING_CONFIRMATIONS =
+    2;
+
+
+/*
+Berapa kali bukti diam harus muncul
+berturut-turut sebelum state STATIONARY.
+*/
+
+const STATIONARY_CONFIRMATIONS =
+    3;
+
+
+/*
+Jumlah sample untuk movement analysis.
+
+4 sample × 5 detik
+≈ window 15 detik.
+*/
+
+const MOVEMENT_WINDOW_SIZE =
+    4;
+
+
+/*
+0 = bergerak acak
+1 = bergerak lurus
+
+GPS noise biasanya lebih acak.
+*/
+
+const MIN_LINEARITY =
+    0.65;
+
+
+/*
+Saat sudah MOVING,
+tidak perlu record titik yang hanya
+berbeda 1-2 meter.
+*/
+
+const MIN_RECORD_DISTANCE_METERS =
+    5;
+
+
+/*
+Photon tidak perlu dipanggil
+setiap record.
+
+Selama belum berpindah 30 meter,
+gunakan alamat sebelumnya.
+*/
+
+const REVERSE_GEOCODE_DISTANCE_METERS =
+    30;
+
+
+
+/*
+=========================================================
+GLOBAL VARIABLES
+=========================================================
+*/
+
+
+let watchId =
+    null;
+
+
+let trackingInterval =
+    null;
+
+
+let latestPosition =
+    null;
+
+
+let trackingCounter =
+    0;
+
+
+let skippedCounter =
+    0;
+
+
+let movementState =
+    "UNCERTAIN";
+
+
+let movingCount =
+    0;
+
+
+let stationaryCount =
+    0;
+
+
+let movementSamples =
+    [];
+
+
+let lastRecordedPosition =
+    null;
+
+
+let isRecording =
+    false;
+
+
+
+/*
+Photon cache
+*/
+
+let lastGeocodePosition =
+    null;
+
+
+let lastGeocodeData =
+    null;
+
+
+
+/*
+MAP
+*/
+
+let map =
+    null;
+
+
+let currentMarker =
+    null;
+
+
+let startMarker =
+    null;
+
+
+let routeLine =
+    null;
+
+
+let routeCoordinates =
+    [];
+
+
+let routePointMarkers =
+    [];
+
+
+
+/*
+=========================================================
+INITIALIZE MAP
+=========================================================
+*/
+
+
+function initializeMap() {
+
+
+    map =
+        L.map(
+            "map"
+        )
+        .setView(
+            [
+                -6.4236974,
+                106.9659941
+            ],
+            15
+        );
+
+
+    L.tileLayer(
+
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+        {
+
+            maxZoom:
+                19,
+
+            attribution:
+                '&copy; OpenStreetMap contributors'
+
+        }
+
+    ).addTo(
+        map
+    );
+
+
+    routeLine =
+        L.polyline(
+
+            [],
+
+            {
+
+                weight:
+                    5
+
+            }
+
+        )
+        .addTo(
+            map
+        );
+
+
+}
+
+
+initializeMap();
+
+
+
+/*
+=========================================================
+START TRACKING
+=========================================================
+*/
+
+
+function startTracking() {
+
+
+    /*
+    Prevent multiple watcher
+    */
+
+    if (
+        watchId !== null ||
+        trackingInterval !== null
+    ) {
+
+        alert(
+            "Tracking sudah berjalan"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !navigator.geolocation
+    ) {
+
+        alert(
+            "Browser tidak mendukung GPS"
+        );
+
+        return;
+
+    }
+
+
+
+    /*
+    Reset movement detector
+    */
+
+    movementSamples =
+        [];
+
+
+    movingCount =
+        0;
+
+
+    stationaryCount =
+        0;
+
+
+    movementState =
+        "UNCERTAIN";
+
+
+    updateMovementUI();
+
+
+    updateStatus(
+
+        "Menunggu GPS...",
+
+        "warning"
+
+    );
+
+
+
+    /*
+    GPS listener tetap aktif.
+
+    Ini tidak otomatis memasukkan history.
+    */
+
+    watchId =
+        navigator.geolocation
+            .watchPosition(
+
+
+                function(position) {
+
+
+                    latestPosition =
+                        position;
+
+
+                    updateCurrentPosition(
+                        position
+                    );
+
+
+                },
+
+
+                function(error) {
+
+
+                    console.error(
+                        "GPS Error:",
+                        error
+                    );
+
+
+                    updateStatus(
+
+                        "GPS Error: " +
+                        error.message,
+
+                        "error"
+
+                    );
+
+
+                },
+
+
                 {
-                    maxZoom: 19,
 
-                    attribution:
-                        '&copy; OpenStreetMap contributors'
+                    enableHighAccuracy:
+                        true,
+
+                    timeout:
+                        15000,
+
+                    maximumAge:
+                        0
+
                 }
-            ).addTo(map);
-
-            routeLine = L.polyline(
-                [],
-                {
-                    weight: 5
-                }
-            ).addTo(map);
-
-        }
 
 
-        initializeMap();
-
-
-        /*
-        =====================================================
-        START TRACKING
-        =====================================================
-        */
-
-        function startTracking() {
-
-            /*
-            Prevent multiple watcher
-            */
-
-            if (
-                watchId !== null ||
-                trackingInterval !== null
-            ) {
-
-                alert(
-                    "Tracking sudah berjalan"
-                );
-
-                return;
-            }
-
-
-            if (!navigator.geolocation) {
-
-                alert(
-                    "Browser tidak mendukung GPS"
-                );
-
-                return;
-            }
-
-
-            updateStatus(
-                "Menunggu GPS...",
-                "active"
             );
 
 
-            /*
-            ---------------------------------------------
-            WATCH GPS
-    
-            GPS berjalan terus.
-    
-            Tetapi data hanya kita record
-            setiap 5 detik.
-            ---------------------------------------------
-            */
 
-            watchId =
-                navigator.geolocation.watchPosition(
+    /*
+    Movement evaluation setiap 5 detik.
+    */
 
-                    function (position) {
+    trackingInterval =
+        setInterval(
 
-                        latestPosition = position;
 
-                        updateCurrentPosition(
-                            position
-                        );
+            async function() {
 
-                    },
 
-                    function (error) {
+                if (
+                    latestPosition !== null
+                ) {
 
-                        console.error(
-                            "GPS Error:",
-                            error
-                        );
 
-                        updateStatus(
-                            "GPS Error: " +
-                            error.message,
-                            "error"
-                        );
+                    await evaluatePosition(
+                        latestPosition
+                    );
 
-                    },
 
-                    {
+                }
 
-                        enableHighAccuracy: true,
 
-                        timeout: 15000,
+            },
 
-                        maximumAge: 0
 
-                    }
+            SAMPLE_INTERVAL_MS
 
-                );
 
+        );
 
-            /*
-            ---------------------------------------------
-            RECORD SETIAP 5 DETIK
-            ---------------------------------------------
-            */
 
-            trackingInterval =
-                setInterval(
 
-                    function () {
+    document
+        .getElementById(
+            "btnStart"
+        )
+        .disabled =
+        true;
 
-                        if (
-                            latestPosition !== null
-                        ) {
 
-                            recordLocation(
-                                latestPosition
-                            );
+    document
+        .getElementById(
+            "btnStop"
+        )
+        .disabled =
+        false;
 
-                        }
 
-                    },
+}
 
-                    5000
 
-                );
 
+/*
+=========================================================
+UPDATE RAW CURRENT POSITION
+=========================================================
+*/
 
-            /*
-            BUTTON STATE
-            */
 
-            document
-                .getElementById("btnStart")
-                .disabled = true;
+function updateCurrentPosition(
+    position
+) {
 
-            document
-                .getElementById("btnStop")
-                .disabled = false;
 
+    const lat =
+        position.coords.latitude;
 
-            updateStatus(
-                "Tracking aktif",
-                "active"
-            );
 
-        }
+    const lon =
+        position.coords.longitude;
 
 
-        /*
-        =====================================================
-        UPDATE CURRENT POSITION
-        =====================================================
-        */
+    const accuracy =
+        position.coords.accuracy;
 
-        function updateCurrentPosition(
-            position
-        ) {
 
-            const lat =
-                position.coords.latitude;
+    const speed =
+        position.coords.speed;
 
-            const lon =
-                position.coords.longitude;
 
-            const accuracy =
-                position.coords.accuracy;
 
-            const speed =
-                position.coords.speed;
+    document
+        .getElementById(
+            "lat"
+        )
+        .innerText =
+        lat.toFixed(
+            7
+        );
 
 
-            document
-                .getElementById("lat")
-                .innerText =
-                lat.toFixed(7);
+    document
+        .getElementById(
+            "lon"
+        )
+        .innerText =
+        lon.toFixed(
+            7
+        );
 
 
-            document
-                .getElementById("lon")
-                .innerText =
-                lon.toFixed(7);
+    document
+        .getElementById(
+            "accuracy"
+        )
+        .innerText =
+        accuracy.toFixed(
+            2
+        )
+        +
+        " meter";
 
 
-            document
-                .getElementById("accuracy")
-                .innerText =
-                accuracy.toFixed(2) +
-                " meter";
+    document
+        .getElementById(
+            "speed"
+        )
+        .innerText =
 
+        speed !== null
 
-            document
-                .getElementById("speed")
-                .innerText =
-                speed !== null
-                    ?
-                    (speed * 3.6)
-                        .toFixed(2)
-                    + " km/h"
-                    :
-                    "-";
+            ?
 
+            (
+                speed *
+                3.6
+            )
+            .toFixed(
+                2
+            )
+            +
+            " km/h"
 
-            document
-                .getElementById("time")
-                .innerText =
-                new Date(
-                    position.timestamp
-                ).toLocaleTimeString();
+            :
 
+            "-";
 
-            /*
-            UPDATE CURRENT MARKER
-            */
 
-            if (currentMarker === null) {
+    document
+        .getElementById(
+            "time"
+        )
+        .innerText =
+        new Date(
+            position.timestamp
+        )
+        .toLocaleTimeString();
 
-                currentMarker =
-                    L.marker([
-                        lat,
-                        lon
-                    ])
-                        .addTo(map);
 
-            }
-            else {
 
-                currentMarker
-                    .setLatLng([
-                        lat,
-                        lon
-                    ]);
+    /*
+    Marker ini hanya menunjukkan
+    raw latest GPS.
 
-            }
+    Tidak berarti titik tersebut
+    masuk history.
+    */
 
+    if (
+        currentMarker === null
+    ) {
 
-            map.panTo([
-                lat,
-                lon
-            ]);
 
-        }
-
-
-        /*
-        =====================================================
-        RECORD LOCATION
-        =====================================================
-        */
-
-        async function recordLocation(
-            position
-        ) {
-
-            const lat =
-                position.coords.latitude;
-
-            const lon =
-                position.coords.longitude;
-
-            const accuracy =
-                position.coords.accuracy;
-
-            const speed =
-                position.coords.speed;
-
-
-            trackingCounter++;
-
-
-            /*
-            ---------------------------------------------
-            REVERSE GEOCODING
-            ---------------------------------------------
-            */
-
-            const locationData =
-                await reverseGeocode(
+        currentMarker =
+            L.marker(
+                [
                     lat,
                     lon
-                );
+                ]
+            )
+            .addTo(
+                map
+            )
+            .bindPopup(
+                "Posisi GPS Saat Ini"
+            );
 
 
-            /*
-            ---------------------------------------------
-            ADD TABLE
-            ---------------------------------------------
-            */
+        map.setView(
+            [
+                lat,
+                lon
+            ],
+            17
+        );
 
-            addTrackingRow(
 
-                trackingCounter,
+    }
+
+    else {
+
+
+        currentMarker
+            .setLatLng(
+                [
+                    lat,
+                    lon
+                ]
+            );
+
+
+    }
+
+
+}
+
+
+
+/*
+=========================================================
+EVALUATE POSITION
+=========================================================
+*/
+
+
+async function evaluatePosition(
+    position
+) {
+
+
+    /*
+    Hindari request async bertumpuk.
+    */
+
+    if (
+        isRecording
+    ) {
+
+        return;
+
+    }
+
+
+
+    const lat =
+        position.coords.latitude;
+
+
+    const lon =
+        position.coords.longitude;
+
+
+    const accuracy =
+        position.coords.accuracy;
+
+
+    const speed =
+        position.coords.speed;
+
+
+    const speedKmh =
+
+        speed !== null
+
+            ?
+
+            speed *
+            3.6
+
+            :
+
+            null;
+
+
+
+    /*
+    =====================================================
+    ACCURACY FILTER
+    =====================================================
+    */
+
+
+    if (
+        accuracy >
+        MAX_ACCURACY_METERS
+    ) {
+
+
+        movementState =
+            "UNCERTAIN";
+
+
+        skippedCounter++;
+
+
+        updateCounterUI();
+
+
+        updateMovementUI();
+
+
+        updateStatus(
+
+            "GPS kurang akurat (" +
+            accuracy.toFixed(
+                1
+            )
+            +
+            " m) - data diabaikan",
+
+            "warning"
+
+        );
+
+
+        console.log(
+
+            "SKIP ACCURACY:",
+
+            accuracy
+
+        );
+
+
+        return;
+
+    }
+
+
+
+    /*
+    Buat sample movement
+    */
+
+    const sample = {
+
+        lat:
+            lat,
+
+        lon:
+            lon,
+
+        accuracy:
+            accuracy,
+
+        speedKmh:
+            speedKmh,
+
+        timestamp:
+            position.timestamp
+
+    };
+
+
+    movementSamples.push(
+        sample
+    );
+
+
+
+    /*
+    Simpan hanya N sample terakhir.
+    */
+
+    if (
+        movementSamples.length >
+        MOVEMENT_WINDOW_SIZE
+    ) {
+
+
+        movementSamples.shift();
+
+
+    }
+
+
+
+    /*
+    Belum cukup sample.
+    */
+
+    if (
+        movementSamples.length <
+        3
+    ) {
+
+
+        movementState =
+            "UNCERTAIN";
+
+
+        skippedCounter++;
+
+
+        updateCounterUI();
+
+
+        updateMovementUI();
+
+
+        updateStatus(
+
+            "Mengumpulkan sample GPS...",
+
+            "warning"
+
+        );
+
+
+        return;
+
+    }
+
+
+
+    /*
+    =====================================================
+    ANALYZE MOVEMENT
+    =====================================================
+    */
+
+
+    const metrics =
+        analyzeMovement(
+            movementSamples
+        );
+
+
+
+    document
+        .getElementById(
+            "movementDistance"
+        )
+        .innerText =
+        metrics.netDistance
+            .toFixed(
+                2
+            )
+        +
+        " m";
+
+
+    document
+        .getElementById(
+            "noiseThreshold"
+        )
+        .innerText =
+        metrics.noiseThreshold
+            .toFixed(
+                2
+            )
+        +
+        " m";
+
+
+
+    /*
+    =====================================================
+    MOVING / STATIONARY VOTING
+    =====================================================
+    */
+
+
+    if (
+        metrics.looksMoving
+    ) {
+
+
+        movingCount++;
+
+
+        stationaryCount =
+            0;
+
+
+    }
+
+    else {
+
+
+        stationaryCount++;
+
+
+        movingCount =
+            0;
+
+
+    }
+
+
+
+    /*
+    Jangan langsung percaya 1 sample.
+    */
+
+
+    if (
+        movingCount >=
+        MOVING_CONFIRMATIONS
+    ) {
+
+
+        movementState =
+            "MOVING";
+
+
+    }
+
+
+    if (
+        stationaryCount >=
+        STATIONARY_CONFIRMATIONS
+    ) {
+
+
+        movementState =
+            "STATIONARY";
+
+
+    }
+
+
+
+    updateMovementUI();
+
+
+
+    /*
+    =====================================================
+    JIKA BUKAN MOVING:
+    STOP DI SINI.
+    =====================================================
+    */
+
+
+    if (
+        movementState !==
+        "MOVING"
+    ) {
+
+
+        skippedCounter++;
+
+
+        updateCounterUI();
+
+
+        updateStatus(
+
+            movementState ===
+            "STATIONARY"
+
+                ?
+
+                "Objek diam - tidak menambah history"
+
+                :
+
+                "Movement belum dapat dipastikan",
+
+            movementState ===
+            "STATIONARY"
+
+                ?
+
+                "idle"
+
+                :
+
+                "warning"
+
+        );
+
+
+        console.log(
+
+            "SKIP:",
+
+            movementState,
+
+            metrics
+
+        );
+
+
+        return;
+
+    }
+
+
+
+    /*
+    =====================================================
+    SAAT SUDAH MOVING,
+    CEK JARAK DARI RECORD TERAKHIR.
+    =====================================================
+    */
+
+
+    let distanceFromLastRecord =
+        null;
+
+
+    if (
+        lastRecordedPosition !==
+        null
+    ) {
+
+
+        distanceFromLastRecord =
+            calculateDistanceMeters(
+
+
+                lastRecordedPosition.lat,
+
+                lastRecordedPosition.lon,
 
                 lat,
 
-                lon,
+                lon
 
-                accuracy,
-
-                speed,
-
-                locationData
 
             );
 
 
-            /*
-            ---------------------------------------------
-            UPDATE CURRENT LOCATION NAME
-            ---------------------------------------------
-            */
 
-            const locationText =
-                buildLocationText(
-                    locationData
+        /*
+        Threshold record juga sedikit
+        mengikuti accuracy.
+        */
+
+
+        const recordThreshold =
+
+            Math.max(
+
+                MIN_RECORD_DISTANCE_METERS,
+
+                accuracy *
+                0.35
+
+            );
+
+
+
+        if (
+            distanceFromLastRecord <
+            recordThreshold
+        ) {
+
+
+            skippedCounter++;
+
+
+            updateCounterUI();
+
+
+            updateStatus(
+
+                "MOVING, tetapi perpindahan baru " +
+                distanceFromLastRecord
+                    .toFixed(
+                        1
+                    )
+                +
+                " m - belum direkam",
+
+                "active"
+
+            );
+
+
+            return;
+
+        }
+
+
+    }
+
+
+
+    /*
+    =====================================================
+    ACCEPTED RECORD
+    =====================================================
+    */
+
+
+    isRecording =
+        true;
+
+
+    try {
+
+
+        await saveAcceptedLocation(
+
+            position,
+
+            distanceFromLastRecord
+
+        );
+
+
+    }
+
+    finally {
+
+
+        isRecording =
+            false;
+
+
+    }
+
+
+}
+
+
+
+/*
+=========================================================
+ANALYZE MOVEMENT
+=========================================================
+*/
+
+
+function analyzeMovement(
+    samples
+) {
+
+
+    let pathDistance =
+        0;
+
+
+    let accuracyTotal =
+        0;
+
+
+
+    /*
+    Hitung panjang seluruh jalur
+    dalam sample window.
+    */
+
+    for (
+        let i = 0;
+        i < samples.length;
+        i++
+    ) {
+
+
+        accuracyTotal +=
+            samples[i].accuracy;
+
+
+        if (
+            i > 0
+        ) {
+
+
+            pathDistance +=
+                calculateDistanceMeters(
+
+
+                    samples[i - 1].lat,
+
+                    samples[i - 1].lon,
+
+                    samples[i].lat,
+
+                    samples[i].lon
+
+
                 );
 
 
-            document
-                .getElementById(
-                    "currentLocationName"
-                )
-                .innerText =
-                "Lokasi: " +
-                locationText;
+        }
 
 
-            /*
-            ---------------------------------------------
-            UPDATE ROUTE
-            ---------------------------------------------
-            */
+    }
 
-            routeCoordinates.push([
+
+
+    const first =
+        samples[0];
+
+
+    const last =
+        samples[
+            samples.length -
+            1
+        ];
+
+
+
+    /*
+    Jarak lurus dari sample pertama
+    ke sample terakhir.
+    */
+
+    const netDistance =
+        calculateDistanceMeters(
+
+
+            first.lat,
+
+            first.lon,
+
+            last.lat,
+
+            last.lon
+
+
+        );
+
+
+
+    /*
+    Average accuracy.
+    */
+
+    const averageAccuracy =
+
+        accuracyTotal /
+        samples.length;
+
+
+
+    /*
+    Noise threshold dinamis.
+
+    Accuracy 5 m  -> min 8 m
+    Accuracy 15 m -> sekitar 12 m
+    Accuracy 25 m -> sekitar 20 m
+    */
+
+    const noiseThreshold =
+
+        Math.max(
+
+            MIN_NOISE_RADIUS_METERS,
+
+            averageAccuracy *
+            0.8
+
+        );
+
+
+
+    /*
+    Linearity:
+
+    1 = bergerak lurus
+
+    nilai kecil =
+    gerakan bolak-balik / noise.
+    */
+
+    const linearity =
+
+        pathDistance > 0
+
+            ?
+
+            netDistance /
+            pathDistance
+
+            :
+
+            0;
+
+
+
+    /*
+    GPS distance evidence
+    */
+
+    const distanceEvidence =
+
+
+        netDistance >=
+        noiseThreshold
+
+
+        &&
+
+
+        pathDistance >=
+        noiseThreshold *
+        1.2
+
+
+        &&
+
+
+        linearity >=
+        MIN_LINEARITY;
+
+
+
+    /*
+    GPS speed evidence
+    */
+
+    const speedEvidence =
+
+
+        last.speedKmh !== null
+
+
+        &&
+
+
+        last.speedKmh >=
+        MIN_MOVING_SPEED_KMH;
+
+
+
+    /*
+    Jika salah satu bukti kuat
+    menyatakan bergerak.
+    */
+
+    const looksMoving =
+
+        speedEvidence ||
+
+        distanceEvidence;
+
+
+
+    console.log(
+
+        {
+
+            pathDistance:
+                pathDistance,
+
+            netDistance:
+                netDistance,
+
+            averageAccuracy:
+                averageAccuracy,
+
+            noiseThreshold:
+                noiseThreshold,
+
+            linearity:
+                linearity,
+
+            speedKmh:
+                last.speedKmh,
+
+            distanceEvidence:
+                distanceEvidence,
+
+            speedEvidence:
+                speedEvidence,
+
+            looksMoving:
+                looksMoving
+
+        }
+
+    );
+
+
+
+    return {
+
+        pathDistance:
+            pathDistance,
+
+        netDistance:
+            netDistance,
+
+        averageAccuracy:
+            averageAccuracy,
+
+        noiseThreshold:
+            noiseThreshold,
+
+        linearity:
+            linearity,
+
+        speedEvidence:
+            speedEvidence,
+
+        distanceEvidence:
+            distanceEvidence,
+
+        looksMoving:
+            looksMoving
+
+    };
+
+
+}
+
+
+
+/*
+=========================================================
+SAVE ACCEPTED LOCATION
+=========================================================
+*/
+
+
+async function saveAcceptedLocation(
+
+    position,
+
+    distanceFromLastRecord
+
+) {
+
+
+    const lat =
+        position.coords.latitude;
+
+
+    const lon =
+        position.coords.longitude;
+
+
+    const accuracy =
+        position.coords.accuracy;
+
+
+    const speed =
+        position.coords.speed;
+
+
+
+    /*
+    Update last accepted position.
+    */
+
+    lastRecordedPosition = {
+
+        lat:
+            lat,
+
+        lon:
+            lon,
+
+        accuracy:
+            accuracy,
+
+        timestamp:
+            position.timestamp
+
+    };
+
+
+
+    trackingCounter++;
+
+
+    updateCounterUI();
+
+
+
+    /*
+    =====================================================
+    GET ADDRESS
+
+    Photon hanya dipanggil jika memang perlu.
+    =====================================================
+    */
+
+
+    const locationData =
+
+        await getSmartReverseGeocode(
+
+            lat,
+
+            lon
+
+        );
+
+
+
+    /*
+    =====================================================
+    TABLE
+    =====================================================
+    */
+
+
+    addTrackingRow(
+
+
+        trackingCounter,
+
+        lat,
+
+        lon,
+
+        accuracy,
+
+        speed,
+
+        distanceFromLastRecord,
+
+        locationData
+
+
+    );
+
+
+
+    /*
+    =====================================================
+    LOCATION NAME
+    =====================================================
+    */
+
+
+    const locationText =
+
+        buildLocationText(
+            locationData
+        );
+
+
+    document
+        .getElementById(
+            "currentLocationName"
+        )
+        .innerText =
+
+        "Lokasi: " +
+        locationText;
+
+
+
+    /*
+    =====================================================
+    ROUTE
+    =====================================================
+    */
+
+
+    routeCoordinates.push(
+
+        [
+            lat,
+            lon
+        ]
+
+    );
+
+
+    routeLine.setLatLngs(
+        routeCoordinates
+    );
+
+
+
+    /*
+    =====================================================
+    DOT ACCEPTED POSITION
+    =====================================================
+    */
+
+
+    const pointMarker =
+
+        L.circleMarker(
+
+            [
                 lat,
                 lon
-            ]);
+            ],
+
+            {
+
+                radius:
+                    4,
+
+                weight:
+                    2,
+
+                fillOpacity:
+                    0.8
+
+            }
+
+        )
+        .addTo(
+            map
+        )
+        .bindPopup(
+
+            `
+            <b>Recorded Position #${trackingCounter}</b>
+            <br>
+            ${escapeHtml(locationText)}
+            <br>
+            Accuracy:
+            ${accuracy.toFixed(2)} m
+            `
+
+        );
 
 
-            routeLine.setLatLngs(
+    routePointMarkers.push(
+        pointMarker
+    );
+
+
+
+    /*
+    Start marker.
+    */
+
+    if (
+        startMarker === null
+    ) {
+
+
+        startMarker =
+
+            L.marker(
+
+                [
+                    lat,
+                    lon
+                ]
+
+            )
+            .addTo(
+                map
+            )
+            .bindPopup(
+                "Titik Awal Tracking"
+            );
+
+
+    }
+
+
+
+    /*
+    Current marker popup.
+    */
+
+    if (
+        currentMarker
+    ) {
+
+
+        currentMarker
+            .bindPopup(
+
+                `
+                <b>Posisi Saat Ini</b>
+                <br>
+                ${escapeHtml(locationText)}
+                <br>
+                Accuracy:
+                ${accuracy.toFixed(2)} m
+                `
+
+            );
+
+
+    }
+
+
+
+    /*
+    =====================================================
+    FIT MAP
+    =====================================================
+    */
+
+
+    if (
+        routeCoordinates.length >
+        1
+    ) {
+
+
+        const bounds =
+
+            L.latLngBounds(
                 routeCoordinates
             );
 
 
-            /*
-            START MARKER
-            */
+        map.fitBounds(
 
-            if (
-                startMarker === null
-            ) {
+            bounds,
 
-                startMarker =
-                    L.marker([
-                        lat,
-                        lon
-                    ])
-                        .addTo(map)
-                        .bindPopup(
-                            "Titik Awal"
-                        );
+            {
 
-            }
-
-
-            /*
-            CURRENT MARKER POPUP
-            */
-
-            if (currentMarker) {
-
-                currentMarker
-                    .bindPopup(
-                        `
-                    <b>Posisi Saat Ini</b>
-                    <br>
-                    ${locationText}
-                    <br>
-                    Accuracy:
-                    ${accuracy.toFixed(2)} m
-                    `
-                    );
-
-            }
-
-
-            /*
-            FIT MAP TO ROUTE
-            */
-
-            if (
-                routeCoordinates.length > 1
-            ) {
-
-                const bounds =
-                    L.latLngBounds(
-                        routeCoordinates
-                    );
-
-                map.fitBounds(
-                    bounds,
-                    {
-                        padding: [30, 30]
-                    }
-                );
-
-            }
-            else {
-
-                map.setView(
+                padding:
                     [
-                        lat,
-                        lon
-                    ],
-                    17
-                );
+                        30,
+                        30
+                    ]
 
             }
 
-        }
+        );
 
 
-        /*
-        =====================================================
-        PHOTON REVERSE API
-        =====================================================
-        */
+    }
 
-        async function reverseGeocode(
+    else {
+
+
+        map.setView(
+
+            [
+                lat,
+                lon
+            ],
+
+            17
+
+        );
+
+
+    }
+
+
+
+    updateStatus(
+
+        "MOVING - posisi direkam",
+
+        "active"
+
+    );
+
+
+}
+
+
+
+/*
+=========================================================
+SMART REVERSE GEOCODE
+=========================================================
+*/
+
+
+async function getSmartReverseGeocode(
+
+    lat,
+
+    lon
+
+) {
+
+
+    /*
+    Kalau belum pernah geocode,
+    langsung Photon.
+    */
+
+    if (
+        lastGeocodePosition ===
+        null
+    ) {
+
+
+        return await requestReverseGeocode(
+
             lat,
+
             lon
-        ) {
 
-            try {
-
-                const url =
-                    "https://photon.komoot.io/reverse"
-                    +
-                    "?lat=" +
-                    encodeURIComponent(lat)
-                    +
-                    "&lon=" +
-                    encodeURIComponent(lon);
+        );
 
 
-                const response =
-                    await fetch(url);
+    }
 
 
-                if (!response.ok) {
 
-                    throw new Error(
-                        "HTTP " +
-                        response.status
-                    );
+    /*
+    Hitung jarak dari titik
+    Photon terakhir.
+    */
 
-                }
+    const distance =
 
-
-                const result =
-                    await response.json();
+        calculateDistanceMeters(
 
 
-                if (
-                    !result.features ||
-                    result.features.length === 0
-                ) {
+            lastGeocodePosition.lat,
 
-                    return null;
-
-                }
-
-
-                return (
-                    result.features[0]
-                        .properties
-                );
-
-            }
-            catch (error) {
-
-                console.error(
-                    "Photon Error:",
-                    error
-                );
-
-                return null;
-
-            }
-
-        }
-
-
-        /*
-        =====================================================
-        BUILD LOCATION TEXT
-        =====================================================
-        */
-
-        function buildLocationText(
-            location
-        ) {
-
-            if (!location) {
-
-                return (
-                    "Lokasi tidak ditemukan"
-                );
-
-            }
-
-
-            const parts = [];
-
-
-            if (location.name) {
-
-                parts.push(
-                    location.name
-                );
-
-            }
-
-
-            if (location.street) {
-
-                parts.push(
-                    location.street
-                );
-
-            }
-
-
-            if (location.city) {
-
-                parts.push(
-                    location.city
-                );
-
-            }
-
-
-            return (
-                parts.length > 0
-                    ?
-                    parts.join(", ")
-                    :
-                    "Lokasi tidak diketahui"
-            );
-
-        }
-
-
-        /*
-        =====================================================
-        ADD TABLE ROW
-        =====================================================
-        */
-
-        function addTrackingRow(
-
-            number,
+            lastGeocodePosition.lon,
 
             lat,
 
-            lon,
+            lon
 
-            accuracy,
 
-            speed,
+        );
 
-            location
+
+
+    /*
+    Belum berpindah 30 meter?
+
+    Gunakan alamat yang sudah ada.
+    Tidak perlu API baru.
+    */
+
+    if (
+
+        distance <
+        REVERSE_GEOCODE_DISTANCE_METERS
+
+
+        &&
+
+
+        lastGeocodeData !==
+        null
+
+    ) {
+
+
+        console.log(
+
+            "Photon CACHE:",
+
+            distance.toFixed(
+                2
+            ),
+
+            "meter"
+
+        );
+
+
+        return lastGeocodeData;
+
+
+    }
+
+
+
+    /*
+    Sudah pindah cukup jauh.
+    Request Photon baru.
+    */
+
+    return await requestReverseGeocode(
+
+        lat,
+
+        lon
+
+    );
+
+
+}
+
+
+
+/*
+=========================================================
+PHOTON API
+=========================================================
+*/
+
+
+async function requestReverseGeocode(
+
+    lat,
+
+    lon
+
+) {
+
+
+    try {
+
+
+        const url =
+
+            "https://photon.komoot.io/reverse"
+
+            +
+
+            "?lat=" +
+            encodeURIComponent(
+                lat
+            )
+
+            +
+
+            "&lon=" +
+            encodeURIComponent(
+                lon
+            );
+
+
+
+        console.log(
+
+            "Photon Request:",
+
+            url
+
+        );
+
+
+
+        const response =
+
+            await fetch(
+                url
+            );
+
+
+
+        if (
+            !response.ok
+        ) {
+
+
+            throw new Error(
+
+                "HTTP " +
+                response.status
+
+            );
+
+
+        }
+
+
+
+        const result =
+
+            await response.json();
+
+
+
+        if (
+
+            !result.features
+
+            ||
+
+            result.features.length ===
+            0
 
         ) {
 
-            const tbody =
-                document.getElementById(
-                    "trackingTable"
-                );
 
+            return null;
 
-            const row =
-                document.createElement(
-                    "tr"
-                );
-
-
-            const time =
-                new Date()
-                    .toLocaleTimeString();
-
-
-            const speedKmh =
-                speed !== null
-                    ?
-                    (
-                        speed * 3.6
-                    ).toFixed(2)
-                    +
-                    " km/h"
-                    :
-                    "-";
-
-
-            row.innerHTML = `
-
-            <td>
-                ${number}
-            </td>
-
-            <td>
-                ${time}
-            </td>
-
-            <td>
-                ${lat.toFixed(7)}
-            </td>
-
-            <td>
-                ${lon.toFixed(7)}
-            </td>
-
-            <td>
-                ${accuracy.toFixed(2)} m
-            </td>
-
-            <td>
-                ${speedKmh}
-            </td>
-
-            <td>
-                ${escapeHtml(
-                location?.name ?? "-"
-            )}
-            </td>
-
-            <td>
-                ${escapeHtml(
-                location?.street ?? "-"
-            )}
-            </td>
-
-            <td>
-                ${escapeHtml(
-                location?.city ?? "-"
-            )}
-            </td>
-
-        `;
-
-
-            /*
-            newest data at top
-            */
-
-            tbody.prepend(row);
 
         }
 
 
+
+        const data =
+
+            result
+                .features[0]
+                .properties;
+
+
+
         /*
-        =====================================================
-        STOP TRACKING
-        =====================================================
+        Save cache.
         */
 
-        function stopTracking() {
+        lastGeocodePosition = {
 
-            if (
-                watchId !== null
-            ) {
+            lat:
+                lat,
 
-                navigator
-                    .geolocation
-                    .clearWatch(
-                        watchId
-                    );
+            lon:
+                lon
 
-                watchId = null;
+        };
 
+
+        lastGeocodeData =
+            data;
+
+
+
+        return data;
+
+
+    }
+
+    catch (
+        error
+    ) {
+
+
+        console.error(
+
+            "Photon Error:",
+
+            error
+
+        );
+
+
+        /*
+        Kalau Photon error,
+        pakai cache sebelumnya
+        kalau ada.
+        */
+
+        return lastGeocodeData;
+
+
+    }
+
+
+}
+
+
+
+/*
+=========================================================
+BUILD LOCATION TEXT
+=========================================================
+*/
+
+
+function buildLocationText(
+    location
+) {
+
+
+    if (
+        !location
+    ) {
+
+
+        return (
+            "Lokasi tidak ditemukan"
+        );
+
+
+    }
+
+
+
+    const parts =
+        [];
+
+
+
+    if (
+        location.name
+    ) {
+
+
+        parts.push(
+            location.name
+        );
+
+
+    }
+
+
+
+    if (
+        location.street
+    ) {
+
+
+        parts.push(
+            location.street
+        );
+
+
+    }
+
+
+
+    if (
+        location.city
+    ) {
+
+
+        parts.push(
+            location.city
+        );
+
+
+    }
+
+
+
+    return (
+
+        parts.length >
+        0
+
+            ?
+
+            parts.join(
+                ", "
+            )
+
+            :
+
+            "Lokasi tidak diketahui"
+
+    );
+
+
+}
+
+
+
+/*
+=========================================================
+ADD HISTORY TABLE ROW
+=========================================================
+*/
+
+
+function addTrackingRow(
+
+    number,
+
+    lat,
+
+    lon,
+
+    accuracy,
+
+    speed,
+
+    distance,
+
+    location
+
+) {
+
+
+    const tbody =
+
+        document.getElementById(
+            "trackingTable"
+        );
+
+
+
+    const row =
+
+        document.createElement(
+            "tr"
+        );
+
+
+
+    const time =
+
+        new Date()
+            .toLocaleTimeString();
+
+
+
+    const speedKmh =
+
+        speed !== null
+
+            ?
+
+            (
+                speed *
+                3.6
+            )
+            .toFixed(
+                2
+            )
+            +
+            " km/h"
+
+            :
+
+            "-";
+
+
+
+    const distanceText =
+
+        distance !== null
+
+            ?
+
+            distance.toFixed(
+                2
+            )
+            +
+            " m"
+
+            :
+
+            "START";
+
+
+
+    row.innerHTML = `
+
+
+        <td>
+            ${number}
+        </td>
+
+
+        <td>
+            ${time}
+        </td>
+
+
+        <td>
+            ${lat.toFixed(7)}
+        </td>
+
+
+        <td>
+            ${lon.toFixed(7)}
+        </td>
+
+
+        <td>
+            ${accuracy.toFixed(2)} m
+        </td>
+
+
+        <td>
+            ${speedKmh}
+        </td>
+
+
+        <td>
+            ${distanceText}
+        </td>
+
+
+        <td>
+
+            ${
+                escapeHtml(
+
+                    location?.name
+                    ??
+                    "-"
+
+                )
             }
 
+        </td>
 
-            if (
-                trackingInterval !== null
-            ) {
 
-                clearInterval(
-                    trackingInterval
-                );
+        <td>
 
-                trackingInterval =
-                    null;
+            ${
+                escapeHtml(
 
+                    location?.street
+                    ??
+                    "-"
+
+                )
             }
 
-
-            latestPosition = null;
-
-
-            document
-                .getElementById("btnStart")
-                .disabled = false;
+        </td>
 
 
-            document
-                .getElementById("btnStop")
-                .disabled = true;
+        <td>
+
+            ${
+                escapeHtml(
+
+                    location?.city
+                    ??
+                    "-"
+
+                )
+            }
+
+        </td>
 
 
-            updateStatus(
-                "Tracking dihentikan",
-                "idle"
+    `;
+
+
+
+    /*
+    Newest first.
+    */
+
+    tbody.prepend(
+        row
+    );
+
+
+}
+
+
+
+/*
+=========================================================
+HAVERSINE DISTANCE
+=========================================================
+*/
+
+
+function calculateDistanceMeters(
+
+    lat1,
+
+    lon1,
+
+    lat2,
+
+    lon2
+
+) {
+
+
+    const earthRadius =
+
+        6371000;
+
+
+
+    const latitude1 =
+
+        lat1 *
+        Math.PI /
+        180;
+
+
+    const latitude2 =
+
+        lat2 *
+        Math.PI /
+        180;
+
+
+    const deltaLatitude =
+
+        (
+            lat2 -
+            lat1
+        )
+        *
+        Math.PI /
+        180;
+
+
+    const deltaLongitude =
+
+        (
+            lon2 -
+            lon1
+        )
+        *
+        Math.PI /
+        180;
+
+
+
+    const a =
+
+        Math.sin(
+            deltaLatitude /
+            2
+        )
+        *
+        Math.sin(
+            deltaLatitude /
+            2
+        )
+
+        +
+
+        Math.cos(
+            latitude1
+        )
+        *
+        Math.cos(
+            latitude2
+        )
+        *
+        Math.sin(
+            deltaLongitude /
+            2
+        )
+        *
+        Math.sin(
+            deltaLongitude /
+            2
+        );
+
+
+
+    const c =
+
+        2
+        *
+        Math.atan2(
+
+            Math.sqrt(
+                a
+            ),
+
+            Math.sqrt(
+                1 -
+                a
+            )
+
+        );
+
+
+
+    return (
+
+        earthRadius *
+        c
+
+    );
+
+
+}
+
+
+
+/*
+=========================================================
+MOVEMENT UI
+=========================================================
+*/
+
+
+function updateMovementUI() {
+
+
+    const element =
+
+        document.getElementById(
+            "movementState"
+        );
+
+
+    element.innerText =
+        movementState;
+
+
+    element.className =
+        "info-value";
+
+
+
+    if (
+        movementState ===
+        "MOVING"
+    ) {
+
+
+        element.classList.add(
+            "movement-moving"
+        );
+
+
+    }
+
+    else if (
+        movementState ===
+        "STATIONARY"
+    ) {
+
+
+        element.classList.add(
+            "movement-stationary"
+        );
+
+
+    }
+
+    else {
+
+
+        element.classList.add(
+            "movement-uncertain"
+        );
+
+
+    }
+
+
+}
+
+
+
+/*
+=========================================================
+COUNTER UI
+=========================================================
+*/
+
+
+function updateCounterUI() {
+
+
+    document
+        .getElementById(
+            "recordedCount"
+        )
+        .innerText =
+        trackingCounter;
+
+
+    document
+        .getElementById(
+            "skippedCount"
+        )
+        .innerText =
+        skippedCounter;
+
+
+}
+
+
+
+/*
+=========================================================
+STOP TRACKING
+=========================================================
+*/
+
+
+function stopTracking() {
+
+
+    if (
+        watchId !==
+        null
+    ) {
+
+
+        navigator
+            .geolocation
+            .clearWatch(
+                watchId
             );
 
-        }
+
+        watchId =
+            null;
 
 
-        /*
-        =====================================================
-        CLEAR HISTORY
-        =====================================================
-        */
-
-        function clearHistory() {
-
-            trackingCounter = 0;
-
-            routeCoordinates = [];
+    }
 
 
-            document
-                .getElementById(
-                    "trackingTable"
-                )
-                .innerHTML = "";
+
+    if (
+        trackingInterval !==
+        null
+    ) {
 
 
-            routeLine.setLatLngs([]);
+        clearInterval(
+            trackingInterval
+        );
 
 
-            if (startMarker) {
+        trackingInterval =
+            null;
+
+
+    }
+
+
+
+    latestPosition =
+        null;
+
+
+    movementSamples =
+        [];
+
+
+    movingCount =
+        0;
+
+
+    stationaryCount =
+        0;
+
+
+    movementState =
+        "UNCERTAIN";
+
+
+    updateMovementUI();
+
+
+
+    document
+        .getElementById(
+            "btnStart"
+        )
+        .disabled =
+        false;
+
+
+    document
+        .getElementById(
+            "btnStop"
+        )
+        .disabled =
+        true;
+
+
+
+    updateStatus(
+
+        "Tracking dihentikan",
+
+        "idle"
+
+    );
+
+
+}
+
+
+
+/*
+=========================================================
+CLEAR HISTORY
+=========================================================
+*/
+
+
+function clearHistory() {
+
+
+    trackingCounter =
+        0;
+
+
+    skippedCounter =
+        0;
+
+
+    routeCoordinates =
+        [];
+
+
+    movementSamples =
+        [];
+
+
+    movingCount =
+        0;
+
+
+    stationaryCount =
+        0;
+
+
+    lastRecordedPosition =
+        null;
+
+
+    lastGeocodePosition =
+        null;
+
+
+    lastGeocodeData =
+        null;
+
+
+    movementState =
+        "UNCERTAIN";
+
+
+    updateMovementUI();
+
+
+    updateCounterUI();
+
+
+
+    document
+        .getElementById(
+            "trackingTable"
+        )
+        .innerHTML =
+        "";
+
+
+
+    routeLine.setLatLngs(
+        []
+    );
+
+
+
+    /*
+    Remove route dots.
+    */
+
+    routePointMarkers
+        .forEach(
+
+            marker => {
 
                 map.removeLayer(
-                    startMarker
-                );
-
-                startMarker = null;
-
-            }
-
-
-            document
-                .getElementById(
-                    "currentLocationName"
-                )
-                .innerText =
-                "Lokasi: -";
-
-        }
-
-
-        /*
-        =====================================================
-        STATUS
-        =====================================================
-        */
-
-        function updateStatus(
-            text,
-            type
-        ) {
-
-            const element =
-                document.getElementById(
-                    "status"
-                );
-
-
-            element.innerText =
-                text;
-
-
-            element.className =
-                "status";
-
-
-            if (
-                type === "active"
-            ) {
-
-                element.classList.add(
-                    "status-active"
-                );
-
-            }
-            else if (
-                type === "error"
-            ) {
-
-                element.classList.add(
-                    "status-error"
-                );
-
-            }
-            else {
-
-                element.classList.add(
-                    "status-idle"
+                    marker
                 );
 
             }
 
-        }
+        );
 
 
-        /*
-        =====================================================
-        BASIC XSS PROTECTION
-        =====================================================
-        */
+    routePointMarkers =
+        [];
 
-        function escapeHtml(
+
+
+    /*
+    Remove start marker.
+    */
+
+    if (
+        startMarker
+    ) {
+
+
+        map.removeLayer(
+            startMarker
+        );
+
+
+        startMarker =
+            null;
+
+
+    }
+
+
+
+    document
+        .getElementById(
+            "currentLocationName"
+        )
+        .innerText =
+        "Lokasi: -";
+
+
+    document
+        .getElementById(
+            "movementDistance"
+        )
+        .innerText =
+        "-";
+
+
+    document
+        .getElementById(
+            "noiseThreshold"
+        )
+        .innerText =
+        "-";
+
+
+}
+
+
+
+/*
+=========================================================
+STATUS
+=========================================================
+*/
+
+
+function updateStatus(
+
+    text,
+
+    type
+
+) {
+
+
+    const element =
+
+        document.getElementById(
+            "status"
+        );
+
+
+    element.innerText =
+        text;
+
+
+    element.className =
+        "status";
+
+
+
+    if (
+        type ===
+        "active"
+    ) {
+
+
+        element.classList.add(
+            "status-active"
+        );
+
+
+    }
+
+    else if (
+        type ===
+        "error"
+    ) {
+
+
+        element.classList.add(
+            "status-error"
+        );
+
+
+    }
+
+    else if (
+        type ===
+        "warning"
+    ) {
+
+
+        element.classList.add(
+            "status-warning"
+        );
+
+
+    }
+
+    else {
+
+
+        element.classList.add(
+            "status-idle"
+        );
+
+
+    }
+
+
+}
+
+
+
+/*
+=========================================================
+XSS PROTECTION
+=========================================================
+*/
+
+
+function escapeHtml(
+    value
+) {
+
+
+    const div =
+
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        String(
             value
-        ) {
+        );
 
-            const div =
-                document.createElement(
-                    "div"
-                );
 
-            div.textContent =
-                String(value);
+    return div.innerHTML;
 
-            return div.innerHTML;
 
-        }
+}
 
-    </script>
+
+</script>
+
 
 </body>
 
