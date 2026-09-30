@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Realtime Test</title>
+</head>
+
+<body>
+
+<h2>GPS Realtime Test</h2>
+
+<button onclick="startTracking()">Mulai Tracking</button>
+<button onclick="stopTracking()">Stop Tracking</button>
+
+<hr>
+
+<p>Latitude: <span id="lat">-</span></p>
+<p>Longitude: <span id="lon">-</span></p>
+<p>Accuracy: <span id="accuracy">-</span> meter</p>
+<p>Speed: <span id="speed">-</span></p>
+<p>Last Update: <span id="time">-</span></p>
+
+<br>
+
+<a id="mapLink" href="#" target="_blank">
+  Buka Posisi di OpenStreetMap
+</a>
+
+<script>
+
+let watchId = null;
+
+function startTracking() {
+
+  if (!navigator.geolocation) {
+    alert("Browser tidak mendukung GPS");
+    return;
+  }
+
+  watchId = navigator.geolocation.watchPosition(
+
+    function(position) {
+
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const accuracy = position.coords.accuracy;
+      const speed = position.coords.speed;
+
+      document.getElementById("lat").innerText = lat;
+      document.getElementById("lon").innerText = lon;
+      document.getElementById("accuracy").innerText = accuracy;
+
+      document.getElementById("speed").innerText =
+        speed !== null
+          ? (speed * 3.6).toFixed(2) + " km/h"
+          : "-";
+
+      document.getElementById("time").innerText =
+        new Date().toLocaleTimeString();
+
+      const mapUrl =
+        `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=18`;
+
+      document.getElementById("mapLink").href = mapUrl;
+
+      console.log("GPS:", lat, lon);
+
+    },
+
+    function(error) {
+
+      alert(
+        "Gagal mengambil lokasi: " +
+        error.message
+      );
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+
+  );
+
+}
+
+function stopTracking() {
+
+  if (watchId !== null) {
+
+    navigator.geolocation.clearWatch(watchId);
+
+    watchId = null;
+
+    alert("Tracking dihentikan");
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
